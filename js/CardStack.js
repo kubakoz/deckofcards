@@ -49,32 +49,28 @@ class CardStack {
 
   }
   
-	giveSpecificCard(card, toStack){
+  giveSpecificCard(card, toStack){
   
-  	const index = this.cards.indexOf(card);
+    const index = this.cards.indexOf(card);
     
     if (index > -1) {
       this.cards.splice(index, 1);
     }
     
-  	toStack.cards.push(card);
+    toStack.cards.push(card);
   }
   
-  giveCardByType(rank, suit, toStack){
-  	
+  giveCardByType(rank, suit, toStack){  	
       
     for(let i = 0; i < this.cards.length; i++){
       
-      console.log(this.cards[i].suit + "|" + suit)
-    	if(this.cards[i].suit == suit && this.cards[i].rank == rank){
-      		
-          
-      	 this.giveSpecificCard(this.cards[i], toStack);         
+      if(this.cards[i].suit == suit && this.cards[i].rank == rank){      		
+            
+          this.giveSpecificCard(this.cards[i], toStack);         
       }
       
     }
   
   }
-
 
 }
