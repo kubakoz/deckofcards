@@ -7,6 +7,7 @@ class CardStack {
 
   addStack(cardStack) {
     this.cards = this.cards.concat(cardStack.cards);
+    cardStack.cards = [];
     return this;
   }
 
@@ -79,7 +80,11 @@ class CardStack {
     if(position>-1 && position < this.cards.length){
       this.giveSpecificCard(this.cards[position], toStack);   
     }
-    
+
+  }
+
+  giveAllCards(toStack){
+    toStack.addStack(this);
   }
 
 }
