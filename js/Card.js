@@ -1,8 +1,8 @@
 const SUITS = {
-  "DIAMOND":  {id: 0, name: 'diamond'},
-  "CLUB":     {id: 2, name: 'club'},
-  "HEART":    {id: 3, name: 'heart'},
-  "SPADE":    {id: 4, name: 'spade'}
+  "DIAMOND":  {id: 0, name: 'diamond', label: '&#9830;'},
+  "CLUB":     {id: 2, name: 'club', label: '&#9827;'},
+  "HEART":    {id: 3, name: 'heart', label: '&#9829;'},
+  "SPADE":    {id: 4, name: 'spade', label: '&#9824;'}
 }
 
 const RANKS = {
