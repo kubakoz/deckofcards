@@ -60,17 +60,26 @@ class CardStack {
     toStack.cards.push(card);
   }
   
-  giveCardByType(rank, suit, toStack){  	
+  giveCardByType(rank, suit, toStack, all){  	
       
     for(let i = 0; i < this.cards.length; i++){
       
       if(this.cards[i].suit == suit && this.cards[i].rank == rank){      		
             
           this.giveSpecificCard(this.cards[i], toStack);         
+          if(!all) return;
       }
       
     }
   
+  }
+
+  giveCardByPosition(position, toStack){
+
+    if(position>-1 && position < this.cards.length){
+      this.giveSpecificCard(this.cards[position], toStack);   
+    }
+    
   }
 
 }
