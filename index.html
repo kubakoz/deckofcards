@@ -6,28 +6,29 @@
 
   <title>Deck of Cards</title>
   <meta name="description" content="Deck of Cards">
-  <meta name="author" content="Jakub Kozlowski">
+  <meta name="author" content="JakubKozlowski@hotmail.com">
 
- <!--  <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+  <script src="js/Card.js"></script>
+  <script src="js/CardStack.js"></script>
+  <script src="js/CardManager.js"></script>
+  <script src="js/GameManager.js"></script>
 
+  <link rel="stylesheet" href="css/cards.css?v=1.0">
+
+	<script>
+		//sandbox - testing scripts
+
+		let dealer = new GameManager();
+		dealer.initialize();
+
+
+	</script>
 </head>
 
 <body>
-  <script src="js/Card.js"></script>
-  <script src="js/CardStack.js"></script>
-  <script src="js/GameManager.js"></script>
 
-  <script>
-  	//sandbox - testing scripts
-
-	let dealer = new GameManager();
-
-
-
-	dealer.initialize();
-
-
-  </script>
+	
+  
 
 </body>
 </html>

@@ -2,13 +2,14 @@ class GameManager {
 
     constructor(){
         
+        this.dealer = new CardManager();
         
     }
     
     initialize(){
     
       this.dealerDeck = this.generateDeck(3);
-      this.dealerDeck.shuffle(3);
+      this.dealer.shuffle(this.dealerDeck, 3);
 
       this.discardDeck = new CardStack();
       this.playerHand = new CardStack();
@@ -20,14 +21,16 @@ class GameManager {
 
     dealHand(){
 
-      this.playerHand.giveAllCards(this.discardDeck);
-      this.dealerHand.giveAllCards(this.discardDeck);
 
-      this.dealerDeck.giveCard(this.playerHand);
-      this.dealerDeck.giveCard(this.dealerHand);
+      this.dealer.giveAllCards(this.playerHand, this.discardDeck);
+      this.dealer.giveAllCards(this.dealerHand, this.discardDeck);
 
-      this.dealerDeck.giveCard(this.playerHand);
-      this.dealerDeck.giveCard(this.dealerHand);
+      this.dealer.giveCard(this.dealerDeck, this.playerHand);
+      this.dealer.giveCard(this.dealerDeck, this.dealerHand);
+
+      this.dealer.giveCard(this.dealerDeck, this.playerHand);
+      this.dealer.giveCard(this.dealerDeck, this.dealerHand);
+
 
       console.log(this.playerHand);
       console.log(this.calculateHand(this.playerHand));
@@ -63,7 +66,7 @@ class GameManager {
     }
 
     hit(){
-      this.dealerDeck.giveCard(this.playerHand);
+      this.dealer.giveCard(this.dealerDeck, this.playerHand);
       console.log(this.calculateHand(this.playerHand));
     }
     
@@ -77,7 +80,7 @@ class GameManager {
     dealerPlay(){
       let thresehold = 100;
       while(this.calculateHand(this.dealerHand) < 17 && thresehold-- > 0){
-        this.dealerDeck.giveCard(this.dealerHand);        
+        this.dealer.giveCard(this.dealerDeck, this.dealerHand);        
       }
     }
 
@@ -118,7 +121,7 @@ class GameManager {
         for (let suit in SUITS) {
           for (let rank in RANKS) {
 
-            stack.addCard(new Card(SUITS[suit], RANKS[rank]));
+            this.dealer.addCard(stack, new Card(SUITS[suit], RANKS[rank]));
 
           }
         }  
