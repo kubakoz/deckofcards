@@ -50,7 +50,6 @@ class Graphics{
 		document.body.appendChild(elm);
 	}
 
-
 	createElementFromHTML(htmlString) {
 
 		var div = document.createElement('div');
@@ -69,8 +68,36 @@ class Graphics{
 
 	queueMoveCard(card, position, offsetX=0, offsetY=0){
 
-		this.animationQueue.push({card: card, position:position, offsetX: offsetX, offsetY: offsetY});
+		this.animationQueue.push({
+			card: card,
+			position:position,
+			offsetX: offsetX,
+			offsetY: offsetY
+		});
 
 	}
 
+	moveCard(card, position, offsetX=0, offsetY=0 ){
+
+		let elm = document.getElementById(card.id);
+		let newPosition = position;
+
+		elm.style.top = (newPosition.y + offsetY) + 'px';
+		elm.style.left = (newPosition.x + offsetX) + 'px';
+	}
+
+	spawnAndQueueMoveCard(card, position, offsetX=0, offsetY=0){
+		this.spawnCard(card, position);
+		this.queueMoveCard(card, position, offsetX, offsetY);
+	}
+
+	faceCardDown(card){
+		let elm = document.getElementById(card.id);
+		elm.classList.add('down');
+	}
+
+	faceCardUp(card){
+		let elm = document.getElementById(card.id);
+		elm.classList.remove('down');	
+	}
 }
