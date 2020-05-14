@@ -1,9 +1,20 @@
+
+const STATE = {
+  
+  "DONE":             0,
+  "PLAYER_ACTION":    1,
+  "DEALER_ACTION":    2
+}
+
+
 class GameManager {
 
     constructor(){
         
         this.dealer = new CardManager();
         this.gfx = new Graphics();
+        this.audio = new Audio();
+        this.state = STATE.DONE;
         
     }
     
@@ -28,6 +39,10 @@ class GameManager {
 
 
     dealHand(){
+
+      if(this.state != STATE.DONE){ return; }
+
+      this.audio.cancelAll();
 
       for(let i = 0; i < this.playerHand.cards.length; i++){
         this.gfx.moveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
@@ -59,87 +74,105 @@ class GameManager {
       this.gfx.queueMoveCard(this.dealerHand.cards[1], this.gfx.positions['dealerHandPile'], 100, 0);      
       
       this.gfx.faceCardDown(this.dealerHand.cards[0]);
-      
-      
+           
+    
 
-
-      readOutLoud('dealer shows: ');
-      readOutLoud( this.dealerHand.cards[1].rank.name + ' of ' + this.dealerHand.cards[1].suit.name +'s');
+      this.audio.say('Player Has: ' + this.calculateHand(this.playerHand));
       
-
-      readOutLoud('Player Has: ' + this.calculateHand(this.playerHand));
-      
+      this.state = STATE.PLAYER_ACTION;
 
       if(this.calculateHand(this.playerHand) == 21){
-        readOutLoud('Black JACK!');
+        this.audio.say('Black JACK!');
+        this.state = STATE.DONE;
       }
 
       if(this.calculateHand(this.dealerHand) == 21){
-        readOutLoud('Dealer has Black JACK!');
-        this.gfx.faceCardUp(this.dealerHand.cards[0]);
+        this.audio.say('Dealer has Black JACK!');
+        setTimeout(()=>{this.gfx.faceCardUp(this.dealerHand.cards[0])}, 3000)
+        this.state = STATE.DONE;
       }
 
+
+
+
     }
+
+
+
     
     calculateHand(cardStack){
 
       let sum=0;
-      let aces = [];
+      let aces = 0;
 
       for(let i = 0; i < cardStack.cards.length; i++){
 
         let card = cardStack.cards[i];
 
         if(card.rank.defaultValue == 14){
-            aces.push(card);
+            aces++;
+            sum += 11;
         }else{
             sum += Math.min(10, card.rank.defaultValue);
         }
           
       }
 
-      for(let i = 0; i < aces.length; i++){
-         if(sum + 11 > 21){
-            sum += 1;
-         }else{
-            sum += 11;
-         }
+      while(sum > 21 && aces-- > 0){
+        sum -=10;
       }
+
       return sum;
 
     }
 
     hit(){
+
       
+      if(this.state != STATE.PLAYER_ACTION){ return; }
+      
+      this.audio.cancelAll();
+
       let card = this.dealer.giveCard(this.dealerDeck, this.playerHand);
       
 
       this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
       this.gfx.queueMoveCard(card, this.gfx.positions['playerPile'], 100*(this.playerHand.cards.length-1));  
 
-      readOutLoud(this.calculateHand(this.playerHand));
+      this.audio.say(this.calculateHand(this.playerHand));
 
       if(this.calculateHand(this.playerHand) == 21){
-        console.log('twenty one!')
+
+        this.stand();
       }
 
       if(this.calculateHand(this.playerHand) > 21){
-        console.log('player busts!')
+        this.audio.say('too many!')
+        this.state = STATE.DONE;
       }
 
     }
     
     stand(){
 
+      if(this.state != STATE.PLAYER_ACTION){ return; }
+
+      this.audio.cancelAll();
+
       this.dealerPlay();
       this.decideWinner();
+
+      this.state = STATE.DONE;
 
     }
 
     dealerPlay(){
+
+      this.state = STATE.DEALER_ACTION;
       let thresehold = 100;
 
       this.gfx.faceCardUp(this.dealerHand.cards[0]);
+
       while(this.calculateHand(this.dealerHand) < 17 && thresehold-- > 0){
         let card = this.dealer.giveCard(this.dealerDeck, this.dealerHand); 
 
@@ -147,38 +180,41 @@ class GameManager {
         this.gfx.queueMoveCard(card, this.gfx.positions['dealerHandPile'], 100*(this.dealerHand.cards.length-1));    
 
       }
+      
+      this.state = STATE.DONE;
     }
 
 
     decideWinner(){
-
+      
+      this.state = STATE.DONE;
+      
       let dealerTotal = this.calculateHand(this.dealerHand);
       let playerTotal = this.calculateHand(this.playerHand);
 
       console.log('dealer shows:');
       console.log(this.dealerHand);
 
-      if(playerTotal > 21){
-        console.log('player busts!');
-        console.log('dealer Wins!');
+
+      if(playerTotal > 21){        
+        this.audio.sayDelayed('Bust! dealer Wins.', 2000);
         return;
       }
 
-      if(dealerTotal > 21){
-        console.log('dealer busts!');
-        console.log('player wins!');
+      if(dealerTotal > 21){        
+        this.audio.sayDelayed('Dealer Busts! player wins!', 2000);
         return;
       }
 
 
       if(playerTotal == dealerTotal){
-        console.log('push!');
+        this.audio.sayDelayed('push!', 2000);
       }else if(playerTotal > dealerTotal){
-        console.log('player wins!');
+        this.audio.sayDelayed('winner winner chicken dinner!', 2000);
       }else{
-        console.log('dealer Wins!');
+        this.audio.sayDelayed('dealer Wins!', 2000);
       }
-
+      
     }
 
     generateDeck(num=1) {

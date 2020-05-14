@@ -13,6 +13,7 @@
   <script src="js/CardManager.js"></script>
   <script src="js/GameManager.js"></script>
   <script src="js/Graphics.js"></script>
+  <script src="js/Audio.js"></script>
 
   <link rel="stylesheet" href="css/cards.css?v=1.212">
 
@@ -20,17 +21,7 @@
 		//sandbox - testing scripts
 
 
-  function readOutLoud(message) {
-    var speech = new SpeechSynthesisUtterance();
-
-    // Set the text and voice attributes.
-    speech.text = message;
-    speech.volume = 1;
-    speech.rate = 1;
-    speech.pitch = 1;
-
-    window.speechSynthesis.speak(speech);
-  }
+  
 
 
 		let game = new GameManager();
@@ -52,7 +43,21 @@
       game.stand();
     }
 
+    document.addEventListener("keydown", keyDownTextField, false);
 
+    function keyDownTextField(e) {
+      var keyCode = e.keyCode;
+      
+      if(keyCode == 37){
+        dealHandler();
+      }
+      if(keyCode == 40){
+        hitHandler();
+      }
+      if(keyCode == 39){
+        standHandler();
+      }
+    }
 
 
 	</script>
@@ -66,9 +71,9 @@
 	<div class="cardplaceholder"></div>
 
   <div class="buttons">
-    <button onclick="dealHandler();">Deal</button>
-    <button onclick="hitHandler();">Hit</button>
-    <button onclick="standHandler();">Stand</button>
+    <button onclick="dealHandler();" class="button">Deal</button>
+    <button onclick="hitHandler();" class="button">Hit</button>
+    <button onclick="standHandler();" class="button">Stand</button>
   </div>
   
 
