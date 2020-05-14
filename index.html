@@ -13,7 +13,7 @@
   <script src="js/CardManager.js"></script>
   <script src="js/GameManager.js"></script>
 
-  <link rel="stylesheet" href="css/cards.css?v=1.0">
+  <link rel="stylesheet" href="css/cards.css?v=1.212">
 
 	<script>
 		//sandbox - testing scripts
@@ -21,13 +21,30 @@
 		let dealer = new GameManager();
 		dealer.initialize();
 
+    function dealHandler(){
+      dealer.dealHand();
+    }
+
+    function hitHandler(){
+      dealer.hit();
+    }
+
+    function standHandler(){
+      dealer.stand();
+    }
 
 	</script>
 </head>
 
 <body>
 
-	
+  <button onclick="dealHandler();">Deal</button>
+  <button onclick="hitHandler();">Hit</button>
+  <button onclick="standHandler();">Stand</button>
+
+	<div class="cardplaceholder"></div>
+
+ 
   
 
 </body>
