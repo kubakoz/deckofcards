@@ -105,7 +105,13 @@ class CardManager{
 
   giveAllCards(fromStack, toStack){
 
-    toStack.addStack(fromStack);
+    //toStack.addStack(fromStack);
+
+
+    toStack.cards = toStack.cards.concat(fromStack.cards);
+    fromStack.cards.splice(0);
+    return toStack;
+
 
   }
 

@@ -32,8 +32,19 @@ class GameManager {
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
 
 
+      console.log('dealer shows: ');
+      console.log(this.dealerHand.cards[1]);
+
       console.log(this.playerHand);
       console.log(this.calculateHand(this.playerHand));
+
+      if(this.calculateHand(this.playerHand) == 21){
+        console.log('Black JACK!')
+      }
+
+      if(this.calculateHand(this.dealerHand) == 21){
+        console.log('Dealer has Black JACK! push!')
+      }
 
     }
     
@@ -68,6 +79,10 @@ class GameManager {
     hit(){
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       console.log(this.calculateHand(this.playerHand));
+
+      if(this.calculateHand(this.playerHand) == 21){
+        console.log('player wins!')
+      }
     }
     
     stand(){
@@ -89,6 +104,9 @@ class GameManager {
 
       let dealerTotal = this.calculateHand(this.dealerHand);
       let playerTotal = this.calculateHand(this.playerHand);
+
+      console.log('dealer shows:');
+      console.log(this.dealerHand);
 
       if(playerTotal > 21){
         console.log('player busts!');
