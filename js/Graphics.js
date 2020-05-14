@@ -11,17 +11,17 @@ class Graphics{
 
 			if(this.animationQueue.length > 0){
 
-				let animation = this.animationQueue.pop();
+				let animation = this.animationQueue.shift();
 				let elm = document.getElementById(animation.card.id);
 				let newPosition = animation.position;
 
-				elm.style.top = newPosition.y + 'px';
-				elm.style.left = newPosition.x + 'px';
+				elm.style.top = (newPosition.y + animation.offsetY) + 'px';
+				elm.style.left = (newPosition.x + animation.offsetX) + 'px';
 
 			}
 
 
-		}, 500);
+		}, 300);
 
 	}
 
@@ -67,9 +67,9 @@ class Graphics{
 
 	}
 
-	queueMoveCard(card, position){
+	queueMoveCard(card, position, offsetX=0, offsetY=0){
 
-		this.animationQueue.push({card: card, position:position});
+		this.animationQueue.push({card: card, position:position, offsetX: offsetX, offsetY: offsetY});
 
 	}
 

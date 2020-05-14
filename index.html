@@ -19,23 +19,23 @@
 	<script>
 		//sandbox - testing scripts
 
-		let dealer = new GameManager();
-		dealer.initialize();
+		let game = new GameManager();
+		game.initialize();
 
 
     gfx = new Graphics();
     
 
     function dealHandler(){
-      dealer.dealHand();      
+      game.dealHand();      
     }
 
     function hitHandler(){
-      dealer.hit();      
+      game.hit();      
     }
 
     function standHandler(){
-      dealer.stand();
+      game.stand();
     }
 
 

@@ -28,7 +28,7 @@ body {
   border-radius: 10px;
   background: #fff;
   box-shadow: 6px 5px 17px black;
-  transition: left 2s, top 2s;
+  transition: left 1.5s, top 2s;
 }
 
 .red {

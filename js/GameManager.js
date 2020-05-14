@@ -10,10 +10,10 @@ class GameManager {
     initialize(){
       
 
-      this.gfx.createPosition(1, 1, 'discardPile');
+      this.gfx.createPosition(-300, 100, 'discardPile');
       this.gfx.createPosition(500, 400, 'playerPile');
-      this.gfx.createPosition(900, 1, 'dealerPile');
-      this.gfx.createPosition(400, 100, 'dealerHandPile');
+      this.gfx.createPosition(900, -501, 'dealerPile');
+      this.gfx.createPosition(400, 50, 'dealerHandPile');
 
 
       this.dealerDeck = this.generateDeck(3);
@@ -29,6 +29,13 @@ class GameManager {
 
     dealHand(){
 
+      for(let i = 0; i < this.playerHand.cards.length; i++){
+        this.gfx.queueMoveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
+      }
+
+      for(let i = 0; i < this.dealerHand.cards.length; i++){
+        this.gfx.queueMoveCard(this.dealerHand.cards[i], this.gfx.positions['discardPile']);
+      }
 
       this.dealer.giveAllCards(this.playerHand, this.discardDeck);
       this.dealer.giveAllCards(this.dealerHand, this.discardDeck);
@@ -36,20 +43,20 @@ class GameManager {
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
 
-      this.gfx.spawnCard(dealer.playerHand.cards[0], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(dealer.playerHand.cards[0], this.gfx.positions['playerPile']);
+      this.gfx.spawnCard(this.playerHand.cards[0], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(this.playerHand.cards[0], this.gfx.positions['playerPile']);
 
-      this.gfx.spawnCard(dealer.dealerHand.cards[0], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(dealer.dealerHand.cards[0], this.gfx.positions['dealerHandPile']);
+      this.gfx.spawnCard(this.dealerHand.cards[0], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(this.dealerHand.cards[0], this.gfx.positions['dealerHandPile']);
 
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
 
-      this.gfx.spawnCard(dealer.playerHand.cards[1], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(dealer.playerHand.cards[1], this.gfx.positions['playerPile']);
+      this.gfx.spawnCard(this.playerHand.cards[1], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(this.playerHand.cards[1], this.gfx.positions['playerPile'], 100, 0);
 
-      this.gfx.spawnCard(dealer.dealerHand.cards[1], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(dealer.dealerHand.cards[1], this.gfx.positions['dealerHandPile']);      
+      this.gfx.spawnCard(this.dealerHand.cards[1], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(this.dealerHand.cards[1], this.gfx.positions['dealerHandPile'], 100, 0);      
       
       
 
@@ -99,7 +106,13 @@ class GameManager {
     }
 
     hit(){
-      this.dealer.giveCard(this.dealerDeck, this.playerHand);
+      
+      let card = this.dealer.giveCard(this.dealerDeck, this.playerHand);
+
+
+      this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(card, this.gfx.positions['playerPile'], 100*(this.playerHand.cards.length-1));  
+
       console.log(this.calculateHand(this.playerHand));
 
       if(this.calculateHand(this.playerHand) == 21){
@@ -122,7 +135,11 @@ class GameManager {
     dealerPlay(){
       let thresehold = 100;
       while(this.calculateHand(this.dealerHand) < 17 && thresehold-- > 0){
-        this.dealer.giveCard(this.dealerDeck, this.dealerHand);        
+        let card = this.dealer.giveCard(this.dealerDeck, this.dealerHand); 
+
+        this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
+        this.gfx.queueMoveCard(card, this.gfx.positions['dealerHandPile'], 100*(this.dealerHand.cards.length-1));    
+
       }
     }
 
