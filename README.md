@@ -1,6 +1,6 @@
 # Deck Of Cards
 
-Deck Of Cards is a web experiment the simulates a deck of cards with a simple game of blackjack.
+Deck Of Cards is a web experiment that simulates a deck of cards with a simple game of blackjack.
 
 ## Installation
 
