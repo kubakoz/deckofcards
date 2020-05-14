@@ -3,13 +3,21 @@ class GameManager {
     constructor(){
         
         this.dealer = new CardManager();
+        this.gfx = new Graphics();
         
     }
     
     initialize(){
-    
+      
+
+      this.gfx.createPosition(1, 1, 'discardPile');
+      this.gfx.createPosition(500, 400, 'playerPile');
+      this.gfx.createPosition(900, 1, 'dealerPile');
+      this.gfx.createPosition(400, 100, 'dealerHandPile');
+
+
       this.dealerDeck = this.generateDeck(3);
-      this.dealer.shuffle(this.dealerDeck, 3);
+      this.dealer.shuffle(this.dealerDeck, 100);
 
       this.discardDeck = new CardStack();
       this.playerHand = new CardStack();
@@ -28,8 +36,22 @@ class GameManager {
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
 
+      this.gfx.spawnCard(dealer.playerHand.cards[0], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(dealer.playerHand.cards[0], this.gfx.positions['playerPile']);
+
+      this.gfx.spawnCard(dealer.dealerHand.cards[0], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(dealer.dealerHand.cards[0], this.gfx.positions['dealerHandPile']);
+
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
+
+      this.gfx.spawnCard(dealer.playerHand.cards[1], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(dealer.playerHand.cards[1], this.gfx.positions['playerPile']);
+
+      this.gfx.spawnCard(dealer.dealerHand.cards[1], this.gfx.positions['dealerPile']);
+      this.gfx.queueMoveCard(dealer.dealerHand.cards[1], this.gfx.positions['dealerHandPile']);      
+      
+      
 
 
       console.log('dealer shows: ');
@@ -43,7 +65,7 @@ class GameManager {
       }
 
       if(this.calculateHand(this.dealerHand) == 21){
-        console.log('Dealer has Black JACK! push!')
+        console.log('Dealer has Black JACK!')
       }
 
     }
@@ -81,8 +103,13 @@ class GameManager {
       console.log(this.calculateHand(this.playerHand));
 
       if(this.calculateHand(this.playerHand) == 21){
-        console.log('player wins!')
+        console.log('twenty one!')
       }
+
+      if(this.calculateHand(this.playerHand) > 21){
+        console.log('player busts!')
+      }
+
     }
     
     stand(){
@@ -134,12 +161,12 @@ class GameManager {
     generateDeck(num=1) {
       console.log("generateDeck")
       var stack = new CardStack();
-
+      let id = 1;
       while(num-- > 0){
         for (let suit in SUITS) {
           for (let rank in RANKS) {
 
-            this.dealer.addCard(stack, new Card(SUITS[suit], RANKS[rank]));
+            this.dealer.addCard(stack, new Card(SUITS[suit], RANKS[rank], 'Card_' + id++));
 
           }
         }  

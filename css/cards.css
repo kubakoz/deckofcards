@@ -21,14 +21,18 @@ body {
 }
 
 .card {
-  position: relative;
-  float: left;
+  position: absolute;
   margin-right: 10px;
   width: 150px;
   height: 220px;
   border-radius: 10px;
   background: #fff;
   box-shadow: 6px 5px 17px black;
+  transition: left 2s, top 2s;
+}
+
+.red {
+  color:maroon;
 }
 
 .card p {

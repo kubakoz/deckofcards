@@ -12,6 +12,7 @@
   <script src="js/CardStack.js"></script>
   <script src="js/CardManager.js"></script>
   <script src="js/GameManager.js"></script>
+  <script src="js/Graphics.js"></script>
 
   <link rel="stylesheet" href="css/cards.css?v=1.212">
 
@@ -21,17 +22,24 @@
 		let dealer = new GameManager();
 		dealer.initialize();
 
+
+    gfx = new Graphics();
+    
+
     function dealHandler(){
-      dealer.dealHand();
+      dealer.dealHand();      
     }
 
     function hitHandler(){
-      dealer.hit();
+      dealer.hit();      
     }
 
     function standHandler(){
       dealer.stand();
     }
+
+
+
 
 	</script>
 </head>
