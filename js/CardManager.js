@@ -38,7 +38,8 @@ class CardManager{
   }
 
   addCard(stack, card) {
-    stack.cards.push(card);    
+    stack.cards.push(card); 
+    return card;   
   }
 
   removeCard(stack, card) {
@@ -51,11 +52,11 @@ class CardManager{
   	let card = fromStack.cards.pop()
     toStack.cards.push(card);
 
-    this.history.push({
-    		from: fromStack,
-    		to: toStack,
-    		card: card
-    	});
+    // this.history.push({
+    // 		from: fromStack,
+    // 		to: toStack,
+    // 		card: card
+    // 	});
 
     return card;
 
@@ -67,16 +68,18 @@ class CardManager{
     
     if (index > -1) {
 
-		fromStack.cards.splice(index, 1);
-		toStack.cards.push(card);
+  		fromStack.cards.splice(index, 1);
+  		toStack.cards.push(card);
 
-		this.history.push({
-			from: fromStack,
-			to: toStack,
-			card: card
-		});
+  		this.history.push({
+  			from: fromStack,
+  			to: toStack,
+  			card: card
+  		});
 
     }
+
+    return card;
       
   }
   
@@ -86,9 +89,9 @@ class CardManager{
       
       if(fromStack.cards[i].suit == suit && fromStack.cards[i].rank == rank){      		
             
-		fromStack.giveSpecificCard(fromStack.cards[i], toStack);
+    		fromStack.giveSpecificCard(fromStack.cards[i], toStack);
 
-		if(!all) return;
+    		if(!all) return;
       }
       
     }
