@@ -22,7 +22,20 @@
 
 
   
+    let buttonsActive= true;
 
+    function timeOutButtons(){
+
+      let active = buttonsActive;
+
+      if(buttonsActive){
+        buttonsActive = false;
+        setTimeout(()=>{
+          buttonsActive = true;
+        }, 1200);
+      }
+      return active;
+    }
 
 		let game = new GameManager();
 		game.initialize();
@@ -32,15 +45,18 @@
     
 
     function dealHandler(){
-      game.dealHand();      
+      if(timeOutButtons())
+        game.dealHand();      
     }
 
     function hitHandler(){
-      game.hit();      
+      if(timeOutButtons())
+        game.hit();      
     }
 
     function standHandler(){
-      game.stand();
+      if(timeOutButtons())
+        game.stand();
     }
 
     document.addEventListener("keydown", keyDownTextField, false);

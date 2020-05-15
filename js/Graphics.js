@@ -7,6 +7,13 @@ class Graphics{
         this.positions = {};
         this.animationQueue = [];
 
+        let testObj = {
+
+            one: {},
+            two: {}
+        }
+
+
         window.setInterval(()=>{
 
             if(this.animationQueue.length > 0){
@@ -21,7 +28,7 @@ class Graphics{
             }
 
 
-        }, 200);
+        }, 150);
 
     }
 
@@ -36,6 +43,11 @@ class Graphics{
 
 
     spawnCard(card, position){
+
+        if(document.getElementById(card.id)){
+            return;
+        }
+
         let elm = this.createDomCard(card);
 
         if(card.suit.color == 'red'){
@@ -73,10 +85,20 @@ class Graphics{
             offsetX: offsetX,
             offsetY: offsetY
         });
+        return card;
 
     }
 
     moveCard(card, position, offsetX=0, offsetY=0 ){
+
+        //first remove card from animation queue to stop queued animations from occuring for this card
+
+        for(let i = 0; i < this.animationQueue.length; i++){
+            if(this.animationQueue[i].card.id == card.id){
+                 this.animationQueue.splice(i, 1);
+            }
+        }
+
 
         let elm = document.getElementById(card.id);
         let newPosition = position;
@@ -85,18 +107,29 @@ class Graphics{
         elm.style.left = (newPosition.x + offsetX) + 'px';
     }
 
+    setZIndex(card, zindex){
+
+        let elm = document.getElementById(card.id);
+        elm.style.zIndex = zindex;
+        return card;
+    }
+
+
     spawnAndQueueMoveCard(card, position, offsetX=0, offsetY=0){
         this.spawnCard(card, position);
         this.queueMoveCard(card, position, offsetX, offsetY);
+        return card;
     }
 
     faceCardDown(card){
         let elm = document.getElementById(card.id);
         elm.classList.add('down');
+        return card;
     }
 
     faceCardUp(card){
         let elm = document.getElementById(card.id);
         elm.classList.remove('down');   
+        return card;
     }
 }

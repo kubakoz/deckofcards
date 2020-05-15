@@ -27,7 +27,7 @@ class GameManager {
       this.gfx.createPosition(400, 50, 'dealerHandPile');
 
 
-      this.dealerDeck = this.generateDeck(3);
+      this.dealerDeck = this.generateDeck(4);
       this.dealer.shuffle(this.dealerDeck, 100);
 
       this.discardDeck = new CardStack();
@@ -38,11 +38,17 @@ class GameManager {
     }
 
 
+
+
     dealHand(){
 
       if(this.state != STATE.DONE){ return; }
 
       this.audio.cancelAll();
+
+
+
+
 
       for(let i = 0; i < this.playerHand.cards.length; i++){
         this.gfx.queueMoveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
@@ -50,6 +56,11 @@ class GameManager {
 
       for(let i = 0; i < this.dealerHand.cards.length; i++){
         this.gfx.queueMoveCard(this.dealerHand.cards[i], this.gfx.positions['discardPile']);
+      }
+
+      if(this.dealerDeck.cards.length < 20){
+        this.reShuffle();
+        return;
       }
 
       this.dealer.giveAllCards(this.playerHand, this.discardDeck);
@@ -60,20 +71,28 @@ class GameManager {
 
       this.gfx.spawnCard(this.playerHand.cards[0], this.gfx.positions['dealerPile']);
       this.gfx.queueMoveCard(this.playerHand.cards[0], this.gfx.positions['playerPile']);
+      this.gfx.setZIndex(this.playerHand.cards[0], 0);
+      this.gfx.faceCardUp(this.playerHand.cards[0]);
 
       this.gfx.spawnCard(this.dealerHand.cards[0], this.gfx.positions['dealerPile']);
       this.gfx.queueMoveCard(this.dealerHand.cards[0], this.gfx.positions['dealerHandPile']);
+      this.gfx.setZIndex(this.dealerHand.cards[0], 0);
+      this.gfx.faceCardDown(this.dealerHand.cards[0]);
 
       this.dealer.giveCard(this.dealerDeck, this.playerHand);
       this.dealer.giveCard(this.dealerDeck, this.dealerHand);
 
       this.gfx.spawnCard(this.playerHand.cards[1], this.gfx.positions['dealerPile']);      
-      this.gfx.queueMoveCard(this.playerHand.cards[1], this.gfx.positions['playerPile'], 100, 0);
+      this.gfx.queueMoveCard(this.playerHand.cards[1], this.gfx.positions['playerPile'], 100, 0);      
+      this.gfx.setZIndex(this.playerHand.cards[1], 1);      
+      this.gfx.faceCardUp(this.playerHand.cards[1]);
+
 
       this.gfx.spawnCard(this.dealerHand.cards[1], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(this.dealerHand.cards[1], this.gfx.positions['dealerHandPile'], 100, 0);      
+      this.gfx.queueMoveCard(this.dealerHand.cards[1], this.gfx.positions['dealerHandPile'], 100, 0);
+      this.gfx.setZIndex(this.dealerHand.cards[1], 1);
+      this.gfx.faceCardUp(this.dealerHand.cards[1]);     
       
-      this.gfx.faceCardDown(this.dealerHand.cards[0]);
            
     
 
@@ -97,7 +116,18 @@ class GameManager {
 
     }
 
+    reShuffle(){
 
+      for(let i = 0; i < this.discardDeck.cards.length; i++){
+
+        this.gfx.faceCardDown(this.discardDeck.cards[i]);
+        this.gfx.queueMoveCard(this.discardDeck.cards[i], this.gfx.positions['dealerPile']);
+
+      }
+      this.dealer.giveAllCards(this.discardDeck, this.dealerDeck);
+
+
+    }
 
     
     calculateHand(cardStack){
@@ -137,7 +167,9 @@ class GameManager {
       
 
       this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(card, this.gfx.positions['playerPile'], 100*(this.playerHand.cards.length-1));  
+      this.gfx.queueMoveCard(card, this.gfx.positions['playerPile'], 100*(this.playerHand.cards.length-1));
+      this.gfx.setZIndex(card, this.playerHand.cards.length);      
+      this.gfx.faceCardUp(card);  
 
       this.audio.say(this.calculateHand(this.playerHand));
 
@@ -177,7 +209,9 @@ class GameManager {
         let card = this.dealer.giveCard(this.dealerDeck, this.dealerHand); 
 
         this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
-        this.gfx.queueMoveCard(card, this.gfx.positions['dealerHandPile'], 100*(this.dealerHand.cards.length-1));    
+        this.gfx.queueMoveCard(card, this.gfx.positions['dealerHandPile'], 100*(this.dealerHand.cards.length-1));   
+        this.gfx.setZIndex(card, this.dealerHand.cards.length);      
+        this.gfx.faceCardUp(card);   
 
       }
       
