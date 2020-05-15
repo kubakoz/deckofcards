@@ -45,11 +45,11 @@ class GameManager {
       this.audio.cancelAll();
 
       for(let i = 0; i < this.playerHand.cards.length; i++){
-        this.gfx.moveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
+        this.gfx.queueMoveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
       }
 
       for(let i = 0; i < this.dealerHand.cards.length; i++){
-        this.gfx.moveCard(this.dealerHand.cards[i], this.gfx.positions['discardPile']);
+        this.gfx.queueMoveCard(this.dealerHand.cards[i], this.gfx.positions['discardPile']);
       }
 
       this.dealer.giveAllCards(this.playerHand, this.discardDeck);
