@@ -7,7 +7,7 @@ class Audio {
 
 
     say(message) {
-	
+		
 	    var speech = new SpeechSynthesisUtterance();
 
 	    // Set the text and voice attributes.
@@ -21,7 +21,7 @@ class Audio {
 
 
 	sayDelayed(message, delay){
-
+		
 		let timer = window.setTimeout(()=>{
 			this.say(message);
 		}, delay);
@@ -30,13 +30,15 @@ class Audio {
 	}
 
 	cancelAll(){
+		
+		for(let i = 0; i < this.queue.length; i++){
+			window.clearTimeout(this.queue[i]);
+		}
 		if(this.synth){
 			this.synth.cancel();	
 		}
 
-		for(let i = 0; i < this.queue.length; i++){
-			window.clearTimeout(this.queue[i]);
-		}
+
 	}
 
  }
