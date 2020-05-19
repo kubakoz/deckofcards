@@ -121,7 +121,7 @@ class GameManager {
       for(let i = 0; i < this.discardDeck.cards.length; i++){
 
         this.gfx.faceCardDown(this.discardDeck.cards[i]);
-        this.gfx.queueMoveCard(this.discardDeck.cards[i], this.gfx.positions['dealerPile']);
+        this.gfx.moveCard(this.discardDeck.cards[i], this.gfx.positions['dealerPile']);
 
       }
       this.dealer.giveAllCards(this.discardDeck, this.dealerDeck);

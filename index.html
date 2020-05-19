@@ -30,11 +30,24 @@
 
       if(buttonsActive){
         buttonsActive = false;
+        hideButtons();
         setTimeout(()=>{
           buttonsActive = true;
-        }, 1200);
+          showButtons();
+        }, 500);
       }
       return active;
+    }
+
+    function showButtons(){
+       let elm = document.getElementById("buttons");
+       elm.style.opacity = 1;
+    }
+
+
+    function hideButtons(){
+       let elm = document.getElementById("buttons");
+       elm.style.opacity = 0.3;
     }
 
 		let game = new GameManager();
@@ -86,7 +99,7 @@
 
 	<div class="cardplaceholder"></div>
 
-  <div class="buttons">
+  <div class="buttons" id="buttons">
     <button onclick="dealHandler();" class="button">Deal</button>
     <button onclick="hitHandler();" class="button">Hit</button>
     <button onclick="standHandler();" class="button">Stand</button>

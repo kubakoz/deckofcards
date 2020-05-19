@@ -7,16 +7,12 @@ class Graphics{
         this.positions = {};
         this.animationQueue = [];
 
-        let testObj = {
-
-            one: {},
-            two: {}
-        }
-
 
         window.setInterval(()=>{
 
             if(this.animationQueue.length > 0){
+
+                if(this.pause) return;
 
                 let animation = this.animationQueue.shift();
                 let elm = document.getElementById(animation.card.id);
@@ -28,7 +24,7 @@ class Graphics{
             }
 
 
-        }, 150);
+        }, 222);
 
     }
 
@@ -92,7 +88,7 @@ class Graphics{
     moveCard(card, position, offsetX=0, offsetY=0 ){
 
         //first remove card from animation queue to stop queued animations from occuring for this card
-
+        this.pause = true;
         for(let i = 0; i < this.animationQueue.length; i++){
             if(this.animationQueue[i].card.id == card.id){
                  this.animationQueue.splice(i, 1);
@@ -105,6 +101,7 @@ class Graphics{
 
         elm.style.top = (newPosition.y + offsetY) + 'px';
         elm.style.left = (newPosition.x + offsetX) + 'px';
+        this.pause = false;
     }
 
     setZIndex(card, zindex){

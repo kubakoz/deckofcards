@@ -4,7 +4,6 @@ class CardManager{
 
   constructor(){
 
-    this.history = [];
 
   }
 
