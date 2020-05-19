@@ -9,7 +9,7 @@ class CardManager{
 
   addStack(fromStack, toStack) {
 
-    toStack.cards = toStack.cards.concat(fromStack.cards);
+    toStack.cards.push(...fromStack.cards);
     fromStack.cards.splice(0);
     
   }
@@ -96,10 +96,29 @@ class CardManager{
 
   giveAllCards(fromStack, toStack){
 
-    toStack.cards = toStack.cards.concat(fromStack.cards);
+    toStack.cards.push(...fromStack.cards);
     fromStack.cards.splice(0);
     return toStack;
 
   }
+
+  generateDeck(num=1) {
+      console.log("generateDeck")
+      var stack = new CardStack();
+      let id = 1;
+      while(num-- > 0){
+        for (let suit in SUITS) {
+          for (let rank in RANKS) {
+
+            this.addCard(stack, new Card(SUITS[suit], RANKS[rank], 'Card_' + id++));
+
+          }
+        }  
+      }
+      
+      console.log(stack);
+
+      return stack;
+    }
 
 }

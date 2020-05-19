@@ -4,8 +4,10 @@ class Graphics{
 
     constructor(){
 
+        console.log('Graphics')
         this.positions = {};
         this.animationQueue = [];
+        this.clockspeed = 222;
 
 
         window.setInterval(()=>{
@@ -24,39 +26,39 @@ class Graphics{
             }
 
 
-        }, 222);
+        }, this.clockspeed);
 
     }
 
-    createDomCard(card){
+    // createDomCard(card){
 
-        let rankLabel = card.rank.label;
-        let suitLabel = card.suit.label;
-        let rankIcon = card.rank.icon;
-        let wrapper = this.createElementFromHTML('<div class="card" id="' + card.id + '"><div class="suit top">' + suitLabel + '</div><div class="rank top">'+rankLabel+'</div><div class="rank center">'+rankIcon+'</div><div class="suit bottom">'+suitLabel+'</div></div>');
-        return wrapper.firstElementChild;
-    }
+    //     let rankLabel = card.rank.label;
+    //     let suitLabel = card.suit.label;
+    //     let rankIcon = card.rank.icon;
+    //     let wrapper = this.createElementFromHTML('<div class="card" id="' + card.id + '"><div class="suit top">' + suitLabel + '</div><div class="rank top">'+rankLabel+'</div><div class="rank center">'+rankIcon+'</div><div class="suit bottom">'+suitLabel+'</div></div>');
+    //     return wrapper.firstElementChild;
+    // }
 
 
-    spawnCard(card, position){
+    // spawnCard(card, position){
 
-        if(document.getElementById(card.id)){
-            return;
-        }
+    //     if(document.getElementById(card.id)){
+    //         return;
+    //     }
 
-        let elm = this.createDomCard(card);
+    //     let elm = this.createDomCard(card);
 
-        if(card.suit.color == 'red'){
-            elm.classList.add("red");
-        }
+    //     if(card.suit.color == 'red'){
+    //         elm.classList.add("red");
+    //     }
 
-        if(position){
-            elm.style.top = position.y + 'px';
-            elm.style.left = position.x + 'px';
-        }
+    //     if(position){
+    //         elm.style.top = position.y + 'px';
+    //         elm.style.left = position.x + 'px';
+    //     }
 
-        document.body.appendChild(elm);
-    }
+    //     document.body.appendChild(elm);
+    // }
 
     createElementFromHTML(htmlString) {
 

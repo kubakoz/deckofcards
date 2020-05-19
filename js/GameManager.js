@@ -11,8 +11,7 @@ class GameManager {
 
     constructor(){
         
-        this.dealer = new CardManager();
-        this.gfx = new Graphics();
+        this.visualDeck = new VisualizedDeck();
         this.audio = new Audio();
         this.state = STATE.DONE;
         
@@ -21,93 +20,58 @@ class GameManager {
     initialize(){
       
 
-      this.gfx.createPosition(-300, 100, 'discardPile');
-      this.gfx.createPosition(500, 400, 'playerPile');
-      this.gfx.createPosition(2000, -501, 'dealerPile');
-      this.gfx.createPosition(400, 50, 'dealerHandPile');
+      this.discardPile = this.visualDeck.createPile(-300, 100, 'discardPile');
+      this.playerPile = this.visualDeck.createPile(500, 400, 'playerPile');
+      this.dealerPile = this.visualDeck.createPile(2000, -501, 'dealerPile', this.visualDeck.generateDeck(1));
+      this.dealerHandPile = this.visualDeck.createPile(400, 50, 'dealerHandPile');
 
-
-      this.dealerDeck = this.generateDeck(4);
-      this.dealer.shuffle(this.dealerDeck, 100);
-
-      this.discardDeck = new CardStack();
-      this.playerHand = new CardStack();
-      this.dealerHand = new CardStack();
+      this.visualDeck.dealer.shuffle(this.dealerPile.stack, 100);
 
     
     }
 
 
 
+    discardHand(){
+
+      if(this.state != STATE.DONE){ return; }
+
+      this.visualDeck.giveAllCardsP(this.playerPile, this.discardPile, 'down');
+      this.visualDeck.giveAllCardsP(this.dealerHandPile, this.discardPile);
+
+      console.log(this.discardPile)
+    }
+
 
     dealHand(){
 
       if(this.state != STATE.DONE){ return; }
 
-      this.audio.cancelAll();
+      this.discardHand();
 
+      if(this.dealerPile.stack.cards.length < 20){
 
-
-
-
-      for(let i = 0; i < this.playerHand.cards.length; i++){
-        this.gfx.queueMoveCard(this.playerHand.cards[i], this.gfx.positions['discardPile']);        
-      }
-
-      for(let i = 0; i < this.dealerHand.cards.length; i++){
-        this.gfx.queueMoveCard(this.dealerHand.cards[i], this.gfx.positions['discardPile']);
-      }
-
-      if(this.dealerDeck.cards.length < 20){
         this.reShuffle();
         return;
       }
 
-      this.dealer.giveAllCards(this.playerHand, this.discardDeck);
-      this.dealer.giveAllCards(this.dealerHand, this.discardDeck);
+      this.visualDeck.giveCardP(this.dealerPile, this.playerPile);
+      this.visualDeck.giveCardP(this.dealerPile, this.dealerHandPile, 'down');
 
-      this.dealer.giveCard(this.dealerDeck, this.playerHand);
-      this.dealer.giveCard(this.dealerDeck, this.dealerHand);
-
-      this.gfx.spawnCard(this.playerHand.cards[0], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(this.playerHand.cards[0], this.gfx.positions['playerPile']);
-      this.gfx.setZIndex(this.playerHand.cards[0], 0);
-      this.gfx.faceCardUp(this.playerHand.cards[0]);
-
-      this.gfx.spawnCard(this.dealerHand.cards[0], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(this.dealerHand.cards[0], this.gfx.positions['dealerHandPile']);
-      this.gfx.setZIndex(this.dealerHand.cards[0], 0);
-      this.gfx.faceCardDown(this.dealerHand.cards[0]);
-
-      this.dealer.giveCard(this.dealerDeck, this.playerHand);
-      this.dealer.giveCard(this.dealerDeck, this.dealerHand);
-
-      this.gfx.spawnCard(this.playerHand.cards[1], this.gfx.positions['dealerPile']);      
-      this.gfx.queueMoveCard(this.playerHand.cards[1], this.gfx.positions['playerPile'], 100, 0);      
-      this.gfx.setZIndex(this.playerHand.cards[1], 1);      
-      this.gfx.faceCardUp(this.playerHand.cards[1]);
-
-
-      this.gfx.spawnCard(this.dealerHand.cards[1], this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(this.dealerHand.cards[1], this.gfx.positions['dealerHandPile'], 100, 0);
-      this.gfx.setZIndex(this.dealerHand.cards[1], 1);
-      this.gfx.faceCardUp(this.dealerHand.cards[1]);     
-      
-           
-    
-
-      this.audio.say('Player Has: ' + this.calculateHand(this.playerHand));
-      
+      this.visualDeck.giveCardP(this.dealerPile, this.playerPile);
+      this.visualDeck.giveCardP(this.dealerPile, this.dealerHandPile);
+   
+                
       this.state = STATE.PLAYER_ACTION;
 
-      if(this.calculateHand(this.playerHand) == 21){
-        this.audio.say('Black JACK!');
+      if(this.calculateHand(this.playerPile.stack) == 21){
+        //blackjack
         this.state = STATE.DONE;
       }
 
-      if(this.calculateHand(this.dealerHand) == 21){
-        this.audio.say('Dealer has Black JACK!');
-        setTimeout(()=>{this.gfx.faceCardUp(this.dealerHand.cards[0])}, 3000)
+      if(this.calculateHand(this.dealerHandPile.stack) == 21){
+        //blackjack
+        setTimeout(()=>{this.visualDeck.faceCardUp(this.dealerHandPile.stack.cards[0])}, 3000)
         this.state = STATE.DONE;
       }
 
@@ -117,14 +81,15 @@ class GameManager {
     }
 
     reShuffle(){
+      
+      this.state = STATE.DEALER_ACTION;
+      
+      setTimeout(()=>{
+        this.state = STATE.DONE;
+      }, 6000);
 
-      for(let i = 0; i < this.discardDeck.cards.length; i++){
-
-        this.gfx.faceCardDown(this.discardDeck.cards[i]);
-        this.gfx.moveCard(this.discardDeck.cards[i], this.gfx.positions['dealerPile']);
-
-      }
-      this.dealer.giveAllCards(this.discardDeck, this.dealerDeck);
+      this.visualDeck.dealer.shuffle(this.discardPile.stack, 100);
+      this.visualDeck.giveAllCardsP(this.discardPile, this.dealerPile, 'down');
 
 
     }
@@ -161,25 +126,15 @@ class GameManager {
       
       if(this.state != STATE.PLAYER_ACTION){ return; }
       
-      this.audio.cancelAll();
+      let card = this.visualDeck.giveCardP(this.dealerPile, this.playerPile, 'up'); 
 
-      let card = this.dealer.giveCard(this.dealerDeck, this.playerHand);
-      
-
-      this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
-      this.gfx.queueMoveCard(card, this.gfx.positions['playerPile'], 100*(this.playerHand.cards.length-1));
-      this.gfx.setZIndex(card, this.playerHand.cards.length);      
-      this.gfx.faceCardUp(card);  
-
-      this.audio.say(this.calculateHand(this.playerHand));
-
-      if(this.calculateHand(this.playerHand) == 21){
+      if(this.calculateHand(this.playerPile.stack) == 21){
 
         this.stand();
       }
 
-      if(this.calculateHand(this.playerHand) > 21){
-        this.audio.say('too many!')
+      if(this.calculateHand(this.playerPile.stack) > 21){
+
         this.state = STATE.DONE;
       }
 
@@ -189,7 +144,6 @@ class GameManager {
 
       if(this.state != STATE.PLAYER_ACTION){ return; }
 
-      this.audio.cancelAll();
 
       this.dealerPlay();
       this.decideWinner();
@@ -203,16 +157,10 @@ class GameManager {
       this.state = STATE.DEALER_ACTION;
       let thresehold = 100;
 
-      this.gfx.faceCardUp(this.dealerHand.cards[0]);
+      this.visualDeck.faceCardUp(this.dealerHandPile.stack.cards[0]);
 
-      while(this.calculateHand(this.dealerHand) < 17 && thresehold-- > 0){
-        let card = this.dealer.giveCard(this.dealerDeck, this.dealerHand); 
-
-        this.gfx.spawnCard(card, this.gfx.positions['dealerPile']);
-        this.gfx.queueMoveCard(card, this.gfx.positions['dealerHandPile'], 100*(this.dealerHand.cards.length-1));   
-        this.gfx.setZIndex(card, this.dealerHand.cards.length);      
-        this.gfx.faceCardUp(card);   
-
+      while(this.calculateHand(this.dealerHandPile.stack) < 17 && thresehold-- > 0){
+        let card = this.visualDeck.giveCardP(this.dealerPile, this.dealerHandPile, 'up'); 
       }
       
       this.state = STATE.DONE;
@@ -223,51 +171,30 @@ class GameManager {
       
       this.state = STATE.DONE;
       
-      let dealerTotal = this.calculateHand(this.dealerHand);
-      let playerTotal = this.calculateHand(this.playerHand);
-
-      console.log('dealer shows:');
-      console.log(this.dealerHand);
+      let dealerTotal = this.calculateHand(this.dealerHandPile);
+      let playerTotal = this.calculateHand(this.playerPile);
 
 
       if(playerTotal > 21){        
-        this.audio.sayDelayed('Bust! dealer Wins.', 2000);
+        //('Bust! dealer Wins.', 2000);
         return;
       }
 
       if(dealerTotal > 21){        
-        this.audio.sayDelayed('Dealer Busts! player wins!', 2000);
+        //('Dealer Busts! player wins!', 2000);
         return;
       }
 
 
       if(playerTotal == dealerTotal){
-        this.audio.sayDelayed('push!', 2000);
+        //('push!', 2000);
       }else if(playerTotal > dealerTotal){
-        this.audio.sayDelayed('winner winner chicken dinner!', 2000);
+        //('winner winner chicken dinner!', 2000);
       }else{
-        this.audio.sayDelayed('dealer Wins!', 2000);
+        //('dealer Wins!', 2000);
       }
       
     }
 
-    generateDeck(num=1) {
-      console.log("generateDeck")
-      var stack = new CardStack();
-      let id = 1;
-      while(num-- > 0){
-        for (let suit in SUITS) {
-          for (let rank in RANKS) {
-
-            this.dealer.addCard(stack, new Card(SUITS[suit], RANKS[rank], 'Card_' + id++));
-
-          }
-        }  
-      }
-      
-      console.log(stack);
-
-      return stack;
-    }
 
 }
