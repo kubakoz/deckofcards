@@ -20,10 +20,11 @@ class GameManager {
     initialize(){
       
 
-      this.discardPile = this.visualDeck.createPile(-300, 100, 'discardPile');
+      this.discardPile = this.visualDeck.createPile(-600, -100, 'discardPile');
       this.playerPile = this.visualDeck.createPile(500, 400, 'playerPile');
-      this.dealerPile = this.visualDeck.createPile(2000, -501, 'dealerPile', this.visualDeck.generateDeck(1));
+      this.dealerPile = this.visualDeck.createPile(2000, -501, 'dealerPile', this.visualDeck.generateDeck(2));
       this.dealerHandPile = this.visualDeck.createPile(400, 50, 'dealerHandPile');
+
 
       this.visualDeck.dealer.shuffle(this.dealerPile.stack, 100);
 
@@ -84,13 +85,12 @@ class GameManager {
       
       this.state = STATE.DEALER_ACTION;
       
-      setTimeout(()=>{
-        this.state = STATE.DONE;
-      }, 6000);
 
       this.visualDeck.dealer.shuffle(this.discardPile.stack, 100);
-      this.visualDeck.giveAllCardsP(this.discardPile, this.dealerPile, 'down');
 
+      this.visualDeck.giveAllCardsP(this.discardPile, this.dealerPile);
+
+      
 
     }
 

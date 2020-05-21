@@ -7,7 +7,7 @@ class Graphics{
         console.log('Graphics')
         this.positions = {};
         this.animationQueue = [];
-        this.clockspeed = 222;
+        this.clockspeed = 333;
 
 
         window.setInterval(()=>{
